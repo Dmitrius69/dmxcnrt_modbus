@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #define F_OSC 16000000 // Clock frequency
 #define BAUD_RATE 250000
 
