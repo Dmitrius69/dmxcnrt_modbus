@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ArduinoRS485.h>
+#include <ArduinoModbus.h>
 
 
 #define F_OSC 16000000 // Clock frequency
@@ -51,6 +53,10 @@ Here you have to select the output mode accordingly to the receiver type you are
 #define SerialTxControl 3   //RS485 управляющий контакт на arduino pin 10
 #define RS485Transmit    HIGH
 #define RS485Receive     LOW 
+#define ENBL HIGH
+#define DISBL LOW
+
+
 enum {
 	BREAK, STARTB, STARTADD, DATA
 };
