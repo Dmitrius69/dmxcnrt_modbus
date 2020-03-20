@@ -6,14 +6,13 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Users\\YSER\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
-                "C:\\Users\\YSER\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\**",
                 "d:/GitHub/dmxcnrt_modbus/include",
                 "d:/GitHub/dmxcnrt_modbus/src",
                 "C:/Users/YSER/.platformio/lib/ArduinoModbus_ID5816/src",
                 "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/variants/mega",
+                "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
                 "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/HID/src",
@@ -32,6 +31,7 @@
                     "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/variants/mega",
+                    "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
                     "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/HID/src",
@@ -58,9 +58,6 @@
             "compilerArgs": [
                 "-mmcu=atmega2560",
                 ""
-            ],
-            "forcedInclude": [
-                "C:\\Users\\YSER\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\cores\\arduino\\Arduino.h"
             ]
         }
     ],

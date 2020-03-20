@@ -1,5 +1,6 @@
-#include <Arduino.h>
-#include <inttypes.h>
+//#include <Arduino.h>
+//#include <inttypes.h>
+#include "ModbusRtu.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
@@ -8,8 +9,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ArduinoRS485.h>
-#include <ArduinoModbus.h>
+//#include <ModbusRtu.h>
+
 
 
 #define F_OSC 16000000 // Clock frequency
@@ -21,8 +22,8 @@
 Here you have to select the output mode accordingly to the receiver type you are using.
  Choose MOSFET or RELAY for OUTPUT_MODE
  */
-#define OUTPUT_MODE RELAY
-//#define OUTPUT_MODE MOSFET
+//#define OUTPUT_MODE RELAY
+#define OUTPUT_MODE MOSFET
 #define THR 20 //threshold for analogRead
 
 #if OUTPUT_MODE == RELAY
@@ -49,13 +50,34 @@ Here you have to select the output mode accordingly to the receiver type you are
 // Define Functions below here or use other .ino or cpp files
 //
 #define DE 2
-#define LED 7
+#define LED 21
 #define SerialTxControl 3   //RS485 управляющий контакт на arduino pin 10
 #define RS485Transmit    HIGH
 #define RS485Receive     LOW 
 #define ENBL HIGH
 #define DISBL LOW
 
+//---- здесь описываем все переменные нужные нам для работы с modbus ModbusRtu
+
+uint16_t au16data[16]; //!< массив данных, используемый как буфер для обмена данными через modbus
+uint8_t u8state; //!< состояние машины
+uint8_t u8query; //!< указатель сообщение
+
+/**
+ *  Modbus object declaration
+ *  u8id : node id = 0 for master, = 1..247 for slave
+ *  port : serial port
+ *  u8txenpin : 0 for RS-232 and USB-FTDI 
+ *               or any pin number > 1 for RS-485
+ */
+Modbus master(0,Serial2,4); // this is master and RS-232 or USB-FTDI
+
+/**
+ * This is an structe which contains a query to an slave device
+ */
+modbus_t telegram[2];
+
+//---------------------------------------------------------------------------
 
 enum {
 	BREAK, STARTB, STARTADD, DATA
@@ -206,6 +228,36 @@ SIGNAL(USART1_RX_vect)
 				}
 
 			}
+			//======================================================
+			//записываем данные в регистры modbus
+			telegram[1].u8id = 1; // slave address
+            telegram[1].u8fct = 6; // function code (this one is write a single register)
+            telegram[1].u16RegAdd = 50000; // start address in slave
+            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
+            //Даем команду ПУСК
+			au16data[0] = 1148;
+			master.query(telegram[1]);
+			master.poll();
+			//while (master.getState() == COM_IDLE) 
+			//{
+			//	Serial.write("CHECK STATE1 \n");/* code */
+		//	}
+			
+			//записываем частоту вращения!
+			//ch1=128;
+			telegram[1].u16RegAdd = 50010; // start address in slave
+            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            telegram[1].au16reg = au16data+4;
+			au16data[4] = map(ch1 ,0,255, 0,16384);
+			master.query(telegram[1]);
+			master.poll();
+			//while (master.getState() == COM_IDLE) 
+			//{
+				/* code */
+			//	Serial.write("CHECK STATE2 \n");
+			//}
+            //========================================*/
 
 		}
 
@@ -293,6 +345,10 @@ void setup() {
 	digitalWrite(SerialTxControl, RS485Receive);
 	//start DMX receive
 	init_USART();
+	//start modbus here
+	Serial2.begin(38400);
+	master.start();
+	Serial.begin(38400);
 
 }
 
@@ -300,7 +356,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   	volatile unsigned int address1, address2, address3, address4, address5, address6, address7, address8, address9;
-	
+	Serial.write("send telegram1 \n");
 	cli(); //disable interrupt
 	//переменный для установки адреса с которого следует слушать DMX поток
 	//по умолчанию равен 1, если адрес равен 0, запускается функция demo()
@@ -328,8 +384,40 @@ void loop() {
 
 
 	sei(); //enable global interrupt
+    Serial.write("send telegram2 \n");
+	for (;;) {
+			/*telegram[1].u8id = 1; // slave address
+            telegram[1].u8fct = 6; // function code (this one is write a single register)
+            telegram[1].u16RegAdd = 50000; // start address in slave
+            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
+            //Даем команду ПУСК
+			au16data[0] = 1148;
+			master.query(telegram[1]);
+			master.poll();
+			//while (master.getState() == COM_IDLE) 
+			//{
+			//	Serial.write("CHECK STATE1 \n");/* code */
+			//}
+			//записываем частоту вращения!
+			/*
+			ch1=128;
+			telegram[1].u16RegAdd = 40010; // start address in slave
+            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            telegram[1].au16reg = au16data+4;
+			au16data[4] = map(ch1 ,0,255, 0,16384);
+			master.query(telegram[1]);
+			master.poll();
 
-	for (;;) {}
+			*/
+			//while (master.getState() == COM_IDLE) 
+			//{
+			//	Serial.write("CHECK STATE2 \n");/* code */
+			//}
+			//Serial.write("send telegram \n");
+			
+
+	}
 
 }
 
