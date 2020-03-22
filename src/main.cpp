@@ -88,6 +88,7 @@ volatile unsigned int dmxStartAddress;
 volatile unsigned int dmxCount = 0;
 volatile unsigned int ch1, ch2, ch3, ch4;
 volatile unsigned int MASTER;
+char dig[4]={' ',' ',' ',' '};
 
 /*Инициализируем USART*/
 void init_USART()
@@ -230,23 +231,37 @@ SIGNAL(USART1_RX_vect)
 			}
 			//======================================================
 			//записываем данные в регистры modbus
+			//master.poll();
 			telegram[1].u8id = 1; // slave address
             telegram[1].u8fct = 6; // function code (this one is write a single register)
-            telegram[1].u16RegAdd = 50000; // start address in slave
+            telegram[1].u16RegAdd = 1; //50000; // start address in slave
             telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
             telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
             //Даем команду ПУСК
 			au16data[0] = 1148;
 			master.query(telegram[1]);
 			master.poll();
-			//while (master.getState() == COM_IDLE) 
+			//while (master.getState() == COM_WAITING) 
 			//{
 			//	Serial.write("CHECK STATE1 \n");/* code */
-		//	}
+			  //master.poll();
+			 // sprintf(dig, "CODE==%d\n", master.getState());
+			 // Serial.write(dig);
+			//}
+			if (master.getState() == COM_IDLE)
+	        {
+			   Serial.write("COM_IDLE \n");
+			}
+			else
+			{
+				sprintf(dig, "CODE==%d\n", master.getState());
+				Serial.write(dig);
+			}
 			
+
 			//записываем частоту вращения!
 			//ch1=128;
-			telegram[1].u16RegAdd = 50010; // start address in slave
+			telegram[1].u16RegAdd = 10;//50010; // start address in slave
             telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
             telegram[1].au16reg = au16data+4;
 			au16data[4] = map(ch1 ,0,255, 0,16384);
@@ -385,16 +400,26 @@ void loop() {
 
 	sei(); //enable global interrupt
     Serial.write("send telegram2 \n");
+	telegram[1].u8id = 1; // slave address
+    telegram[1].u8fct = 6; // function code (this one is write a single register)
+    telegram[1].u16RegAdd = 1; //50000; // start address in slave
+    telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+    telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
+    //Даем команду ПУСК
+	au16data[0] = 1148;
+	master.query(telegram[1]);
+	master.poll();
+
 	for (;;) {
-			/*telegram[1].u8id = 1; // slave address
-            telegram[1].u8fct = 6; // function code (this one is write a single register)
-            telegram[1].u16RegAdd = 50000; // start address in slave
-            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
-            telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
+			//telegram[1].u8id = 1; // slave address
+            //telegram[1].u8fct = 6; // function code (this one is write a single register)
+            //telegram[1].u16RegAdd = 1; //50000; // start address in slave
+            //telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            //telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
             //Даем команду ПУСК
-			au16data[0] = 1148;
-			master.query(telegram[1]);
-			master.poll();
+			//au16data[0] = 1148;
+			//master.query(telegram[1]);
+			//master.poll();
 			//while (master.getState() == COM_IDLE) 
 			//{
 			//	Serial.write("CHECK STATE1 \n");/* code */

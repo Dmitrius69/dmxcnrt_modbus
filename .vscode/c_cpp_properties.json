@@ -12,6 +12,7 @@
                 "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/variants/mega",
+                "d:/GitHub/dmxcnrt_modbus/lib/OLED_I2C",
                 "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
                 "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
@@ -31,6 +32,7 @@
                     "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/variants/mega",
+                    "d:/GitHub/dmxcnrt_modbus/lib/OLED_I2C",
                     "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
                     "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
@@ -43,7 +45,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=40201",
+                "PLATFORMIO=40301",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",
