@@ -248,7 +248,7 @@ public:
  */
 Modbus::Modbus(uint8_t u8id, Stream& port, uint8_t u8txenpin)
 {
-    this->port = &port;
+        this->port = &port;
     this->u8id = u8id;
     this->u8txenpin = u8txenpin;
     this->u16timeOut = 1000;
