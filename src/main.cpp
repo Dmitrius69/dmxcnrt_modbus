@@ -364,7 +364,7 @@ void setup() {
 	//start DMX receive
 	init_USART();
 	//start modbus here
-	Serial2.begin(19200);
+	Serial2.begin(38400);
 	master.start();
 	//master.setTimeOut( 5000 );
 	//master.begin(19200);
