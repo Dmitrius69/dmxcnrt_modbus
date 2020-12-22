@@ -22,8 +22,8 @@
 Here you have to select the output mode accordingly to the receiver type you are using.
  Choose MOSFET or RELAY for OUTPUT_MODE
  */
-//#define OUTPUT_MODE RELAY
-#define OUTPUT_MODE MOSFET
+#define OUTPUT_MODE RELAY
+//#define OUTPUT_MODE MOSFET
 #define THR 20 //threshold for analogRead
 
 #if OUTPUT_MODE == RELAY
@@ -87,6 +87,7 @@ volatile unsigned int dmxStatus;
 volatile unsigned int dmxStartAddress;
 volatile unsigned int dmxCount = 0;
 volatile unsigned int ch1, ch2, ch3, ch4;
+volatile unsigned int channel[4]={0,0,0,0};
 volatile unsigned int MASTER;
 char dig[4]={' ',' ',' ',' '};
 
@@ -162,17 +163,20 @@ SIGNAL(USART1_RX_vect)
 		if (dmxCount == dmxStartAddress)
 		{
 			ch1 = dmxByte;
+			channel[0] = ch1;
 			dmxCount++;
 		}
 		else if (dmxCount == (dmxStartAddress + 1))
 		{
 			ch2 = dmxByte;
+			channel[1] = ch2;
 			dmxCount++;
 		}
 		else if (dmxCount == (dmxStartAddress + 2))
 		{
 
 			ch3 = dmxByte;
+			channel[2] = ch3;
 			dmxCount++;
 
 
@@ -180,6 +184,7 @@ SIGNAL(USART1_RX_vect)
 		else  if (dmxCount == (dmxStartAddress + 3))
 		{
 			ch4 = dmxByte;
+			channel[3] = ch4;
 			dmxCount = 1;
 			dmxStatus = BREAK;	// ALL CHANNELS RECEIVED
 
@@ -241,6 +246,11 @@ SIGNAL(USART1_RX_vect)
 			au16data[0] = 1148;
 			master.query(telegram[1]);
 			master.poll();
+
+
+
+
+
 			
 			//while (master.getState() == COM_WAITING) 
 			//{
@@ -249,27 +259,33 @@ SIGNAL(USART1_RX_vect)
 			 // sprintf(dig, "CODE==%d\n", master.getState());
 			 // Serial.write(dig);
 			//}
-			if (master.getState() == COM_IDLE)
-	        {
-			   Serial.write("COM_IDLE \n");
-			}
-			else
-			{
-				sprintf(dig, "CODE==%d\n", master.getState());
-				Serial.write(dig);
-			}
+			//if (master.getState() == COM_IDLE)
+	        //{
+			//   Serial.write("COM_IDLE \n");
+			//}
+			//else
+			//{
+			//	sprintf(dig, "CODE==%d\n", master.getState());
+			//	Serial.write(dig);
+			//}
 			
 
 			//записываем частоту вращения!
 			//ch1=128;
-			telegram[1].u8fct = 16;
-			telegram[1].u16RegAdd = 49999; // start address in slave
-            telegram[1].u16CoilsNo = 11; // number of elements (coils or registers) to read
-            telegram[1].au16reg = au16data;
-			au16data[0] = 1148;
-			au16data[10] = map(ch1 ,0,255, 0,16384);
-			master.query(telegram[1]);
-			master.poll();
+			for (int iChannel=1;  iChannel<=4; iChannel++)
+			{
+			  telegram[1].u8id = iChannel; // slave address
+			  telegram[1].u8fct = 16;
+			  telegram[1].u16RegAdd = 49999; // start address in slave
+              telegram[1].u16CoilsNo = 11; // number of elements (coils or registers) to read
+              telegram[1].au16reg = au16data;
+			  au16data[0] = 1148;
+			  au16data[10] = map(channel[iChannel-1] ,0,255, 0,16384);
+			  master.query(telegram[1]);
+			  master.poll();
+			}
+			sprintf(dig, "CODE==%d\n", au16data[10]);
+			Serial.write(dig);
 			//while (master.getState() == COM_IDLE) 
 			//{
 				/* code */
@@ -369,7 +385,7 @@ void setup() {
 	//master.setTimeOut( 5000 );
 	//master.begin(19200);
 
-	Serial.begin(38400);
+	Serial.begin(9600);
 
 }
 
