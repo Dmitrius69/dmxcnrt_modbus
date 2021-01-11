@@ -1,10 +1,12 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
 {
     "configurations": [
         {
-            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
-        },
-        {
-            "name": "Win32",
+            "name": "PlatformIO",
             "includePath": [
                 "d:/GitHub/dmxcnrt_modbus/include",
                 "d:/GitHub/dmxcnrt_modbus/src",
@@ -15,7 +17,8 @@
                 "d:/GitHub/dmxcnrt_modbus/lib/OLED_I2C",
                 "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                 "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
-                "C:/Users/YSER/.platformio/lib/ArduinoModbus_ID5816/src",
+                "C:/Users/YSER/.platformio/lib/ArduinoModbus/src",
+                "C:/Users/YSER/.platformio/lib/ArduinoRS485/src",
                 "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/HID/src",
@@ -37,7 +40,8 @@
                     "d:/GitHub/dmxcnrt_modbus/lib/OLED_I2C",
                     "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/ArduinoRS485_ID5814/src",
                     "d:/GitHub/dmxcnrt_modbus/.pio/libdeps/megaatmega2560/Modbus-Master-Slave-for-Arduino",
-                    "C:/Users/YSER/.platformio/lib/ArduinoModbus_ID5816/src",
+                    "C:/Users/YSER/.platformio/lib/ArduinoModbus/src",
+                    "C:/Users/YSER/.platformio/lib/ArduinoRS485/src",
                     "C:/Users/YSER/.platformio/lib/Modbus_ID1726",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/HID/src",
@@ -49,7 +53,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=50003",
+                "PLATFORMIO=50004",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",
@@ -57,7 +61,6 @@
                 "__AVR_ATmega2560__",
                 ""
             ],
-            "intelliSenseMode": "gcc-x64",
             "cStandard": "c11",
             "cppStandard": "c++11",
             "compilerPath": "C:/Users/YSER/.platformio/packages/toolchain-atmelavr/bin/avr-gcc.exe",

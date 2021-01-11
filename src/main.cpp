@@ -237,15 +237,20 @@ SIGNAL(USART1_RX_vect)
 			//======================================================
 			//записываем данные в регистры modbus
 			//master.poll();
-			telegram[1].u8id = 2; // slave address
-            telegram[1].u8fct = 6; // function code (this one is write a single register)
-            telegram[1].u16RegAdd = 49999; // start address in slave
-            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
-            telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
-            //Даем команду ПУСК
-			au16data[0] = 1148;
-			master.query(telegram[1]);
-			master.poll();
+			for (int iSlave=1; iSlave <=4; iSlave++)
+			{
+			  telegram[1].u8id = iSlave; // slave address
+              telegram[1].u8fct = 6; // function code (this one is write a single register)
+              telegram[1].u16RegAdd = 49999; // start address in slave
+              telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+              //Даем команду ПУСК
+              au16data[0] = 1148;
+              telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
+              
+			  
+			  master.query(telegram[1]);
+			  master.poll();
+		    }
 
 
 
