@@ -22,8 +22,8 @@
 Here you have to select the output mode accordingly to the receiver type you are using.
  Choose MOSFET or RELAY for OUTPUT_MODE
  */
-#define OUTPUT_MODE RELAY
-//#define OUTPUT_MODE MOSFET
+//#define OUTPUT_MODE RELAY
+#define OUTPUT_MODE MOSFET
 #define THR 20 //threshold for analogRead
 
 #if OUTPUT_MODE == RELAY
@@ -89,7 +89,9 @@ volatile unsigned int dmxCount = 0;
 volatile unsigned int ch1, ch2, ch3, ch4;
 volatile unsigned int channel[4]={0,0,0,0};
 volatile unsigned int MASTER;
-char dig[4]={' ',' ',' ',' '};
+volatile int iChannel;
+char dig[10]={' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+char sOut[6]={' ',' ',' ',' ',' ',' '};
 
 /*Инициализируем USART*/
 void init_USART()
@@ -108,9 +110,12 @@ SIGNAL(USART1_RX_vect)
 {
 	int temp = UCSR1A;  //получаем байт состояния
 	int dmxByte = UDR1; //получаем данные из регистра данных 
-
+    //char bDMX[4];
+	//sprintf(bDMX,"%d\n", dmxByte);
 	digitalWrite(LED, HIGH);
-
+    //Serial.write("start int ");
+    //Serial.write(bDMX);
+	
 	if (temp&(1 << DOR1))	// Data Overrun?
 	{
 		dmxStatus = BREAK;	// wait for reset (BREAK)
@@ -160,16 +165,22 @@ SIGNAL(USART1_RX_vect)
 
 
 	case DATA:	// HERE YOU SHOULD PROCESS THE CHOSEN DMX CHANNELS!!!
+	    
 		if (dmxCount == dmxStartAddress)
 		{
 			ch1 = dmxByte;
 			channel[0] = ch1;
+			iChannel = 1;
+		    //sprintf(sOut, "#%d#\n", dmxByte );
+	        //Serial.write(sOut);
+
 			dmxCount++;
 		}
 		else if (dmxCount == (dmxStartAddress + 1))
 		{
 			ch2 = dmxByte;
 			channel[1] = ch2;
+			iChannel = 2;
 			dmxCount++;
 		}
 		else if (dmxCount == (dmxStartAddress + 2))
@@ -177,6 +188,7 @@ SIGNAL(USART1_RX_vect)
 
 			ch3 = dmxByte;
 			channel[2] = ch3;
+			iChannel = 3;
 			dmxCount++;
 
 
@@ -185,15 +197,16 @@ SIGNAL(USART1_RX_vect)
 		{
 			ch4 = dmxByte;
 			channel[3] = ch4;
+			iChannel = 4;
 			dmxCount = 1;
 			dmxStatus = BREAK;	// ALL CHANNELS RECEIVED
 
 			if (OUTPUT_MODE == MOSFET)        //Mosfet or Relay receiver?
 			{
-				analogWrite(PWMpin1, ch1);	// update mosfet outputs
-				analogWrite(PWMpin2, ch2);
-				analogWrite(PWMpin3, ch3);
-				analogWrite(PWMpin4, ch4);
+				analogWrite(PWMpin1, channel[0]);	// update mosfet outputs
+				analogWrite(PWMpin2, channel[1]);
+				analogWrite(PWMpin3, channel[2]);
+				analogWrite(PWMpin4, channel[3]);
 			}
 			else if (OUTPUT_MODE == RELAY)
 			{
@@ -237,7 +250,7 @@ SIGNAL(USART1_RX_vect)
 			//======================================================
 			//записываем данные в регистры modbus
 			//master.poll();
-			for (int iSlave=1; iSlave <=4; iSlave++)
+			/*for (int iSlave=1; iSlave <=4; iSlave++)
 			{
 			  telegram[1].u8id = iSlave; // slave address
               telegram[1].u8fct = 6; // function code (this one is write a single register)
@@ -251,7 +264,7 @@ SIGNAL(USART1_RX_vect)
 			  master.query(telegram[1]);
 			  master.poll();
 		    }
-
+            */
 
 
 
@@ -277,28 +290,57 @@ SIGNAL(USART1_RX_vect)
 
 			//записываем частоту вращения!
 			//ch1=128;
-			for (int iChannel=1;  iChannel<=4; iChannel++)
-			{
+		    //sprintf(sOut, "#%d#\n", channel[0] );
+	        //Serial.write(sOut);
+            // iChannel = 1;
+			//for (int i=1;  i<=100; i++)
+			//{
+			/*----------------------------------------------------	
 			  telegram[1].u8id = iChannel; // slave address
 			  telegram[1].u8fct = 16;
 			  telegram[1].u16RegAdd = 49999; // start address in slave
-              telegram[1].u16CoilsNo = 11; // number of elements (coils or registers) to read
+              telegram[1].u16CoilsNo = 10; // number of elements (coils or registers) to read
               telegram[1].au16reg = au16data;
 			  au16data[0] = 1148;
-			  au16data[10] = map(channel[iChannel-1] ,0,255, 0,16384);
+			  au16data[9] = map(channel[iChannel-1] ,0,255, 0,16384);
 			  master.query(telegram[1]);
 			  master.poll();
-			}
-			sprintf(dig, "CODE==%d\n", au16data[10]);
-			Serial.write(dig);
-			//while (master.getState() == COM_IDLE) 
-			//{
-				/* code */
-			//	Serial.write("CHECK STATE2 \n");
+			  
 			//}
+			sprintf(dig, "%d %d\n",iChannel, au16data[9] );
+			Serial.write(dig);
             //========================================*/
-
+            
 		}
+    	 telegram[1].u8id = iChannel; // slave address
+		 telegram[1].u8fct = 6;
+		 telegram[1].u16RegAdd = 49999; // start address in slave
+         telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+         telegram[1].au16reg = au16data;
+		 au16data[0] = 1148;
+		 //au16data[9] = map(channel[iChannel-1] ,0,255, 0,16384);
+		 master.query(telegram[1]);
+		 master.poll();
+
+    	 telegram[1].u8id = iChannel; // slave address
+		 telegram[1].u8fct = 6;
+		 telegram[1].u16RegAdd = 50009; // start address in slave
+         telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+         telegram[1].au16reg = au16data;
+		 //au16data[0] = 1148;
+		 au16data[0] = map(channel[iChannel-1] ,0,255, 0,16384);
+		 master.query(telegram[1]);
+		 master.poll();
+
+
+
+
+			//}
+		sprintf(dig, "%d %d\n",iChannel, au16data[0] );
+		Serial.write(dig);
+
+
+
 
 	}
 
@@ -385,7 +427,8 @@ void setup() {
 	//start DMX receive
 	init_USART();
 	//start modbus here
-	Serial2.begin(38400);
+	Serial2.begin(38400, SERIAL_8E1);
+	master.setTimeOut( 50 );
 	master.start();
 	//master.setTimeOut( 5000 );
 	//master.begin(19200);
@@ -398,7 +441,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   	volatile unsigned int address1, address2, address3, address4, address5, address6, address7, address8, address9;
-	Serial.write("send telegram1 \n");
+	//Serial.write("send telegram1 \n");
 	cli(); //disable interrupt
 	//переменный для установки адреса с которого следует слушать DMX поток
 	//по умолчанию равен 1, если адрес равен 0, запускается функция demo()
@@ -437,17 +480,17 @@ void loop() {
 
 
 
-	//telegram[1].u8id = 1; // slave address
-    //telegram[1].u8fct = 6; // function code (this one is write a single register)
-    //telegram[1].u16RegAdd = 50000; // start address in slave
-    //telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
-    //telegram[1].au16reg = au16data+4; // pointer to a memory array in the Arduino
+	telegram[1].u8id = 1; // slave address
+    telegram[1].u8fct = 6; // function code (this one is write a single register)
+    telegram[1].u16RegAdd = 49999; // start address in slave
+    telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+    telegram[1].au16reg = au16data; // pointer to a memory array in the Arduino
     //Даем команду ПУСК
-	//au16data[4] = 1148;
-	//master.query(telegram[1]);
-	//master.poll();
+	au16data[0] = 1148;
+	master.query(telegram[1]);
+	master.poll();
 	
-
+    Serial.write("start cycle\n");
 	for (;;) {
 			//telegram[1].u8id = 1; // slave address
             //telegram[1].u8fct = 6; // function code (this one is write a single register)
@@ -463,21 +506,24 @@ void loop() {
 			//	Serial.write("CHECK STATE1 \n");/* code */
 			//}
 			//записываем частоту вращения!
-			/*
-			ch1=128;
-			telegram[1].u16RegAdd = 40010; // start address in slave
-            telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
-            telegram[1].au16reg = au16data+4;
-			au16data[4] = map(ch1 ,0,255, 0,16384);
-			master.query(telegram[1]);
-			master.poll();
+			
+			//ch1=128;
+			//telegram[1].u16RegAdd = 40010; // start address in slave
+            //telegram[1].u16CoilsNo = 1; // number of elements (coils or registers) to read
+            //telegram[1].au16reg = au16data+4;
+			//au16data[4] = map(ch1 ,0,255, 0,16384);
+			//master.query(telegram[1]);
+			//master.poll();
 
-			*/
+			
 			//while (master.getState() == COM_IDLE) 
 			//{
 			//	Serial.write("CHECK STATE2 \n");/* code */
 			//}
 			//Serial.write("send telegram \n");
+
+
+
 			
 
 	}
