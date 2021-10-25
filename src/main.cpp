@@ -302,8 +302,8 @@ SIGNAL(USART1_RX_vect)
 {
 	int temp = UCSR1A;  //получаем байт состояния
 	int dmxByte = UDR1; //получаем данные из регистра данных 
-    //char bDMX[4];
-	//sprintf(bDMX,"%d\n", dmxByte);
+    char bDMX[4];
+	sprintf(bDMX,"%d\n", dmxByte);
 	digitalWrite(LED, HIGH);
     //Serial.write("start int ");
     //Serial.write(bDMX);
@@ -539,7 +539,7 @@ void loop() {
 	cli(); //disable interrupt
 	//переменный для установки адреса с которого следует слушать DMX поток
 	//по умолчанию равен 1, если адрес равен 0, запускается функция demo()
-	address1 = 9;
+	address1 = 1;
 	address2 = 0;
 	address3 = 0;
 	address4 = 0;
