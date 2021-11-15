@@ -303,7 +303,7 @@ SIGNAL(USART1_RX_vect)
 	int temp = UCSR1A;  //получаем байт состояния
 	int dmxByte = UDR1; //получаем данные из регистра данных 
     char bDMX[4];
-	sprintf(bDMX,"%d\n", dmxByte);
+	//sprintf(bDMX,"%d#%d\n", dmxByte, temp);
 	digitalWrite(LED, HIGH);
     //Serial.write("start int ");
     //Serial.write(bDMX);
@@ -416,7 +416,7 @@ SIGNAL(USART1_RX_vect)
 
 		    sprintf(sOut, "%d#%d#%d#%d\n", channel[0], channel[1], channel[2], channel[3] );
 	        Serial.write(sOut);
-
+            
             
 		}
 
