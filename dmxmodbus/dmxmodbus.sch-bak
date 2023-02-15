@@ -1,0 +1,38 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Isolator:ADuM1410 U?
+U 1 1 619F49CB
+P 5450 2050
+F 0 "U?" H 5450 2817 50  0000 C CNN
+F 1 "ADuM1410" H 5450 2726 50  0000 C CNN
+F 2 "Package_SO:SOIC-16W_7.5x10.3mm_P1.27mm" H 5450 1350 50  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADUM1410_1411_1412.pdf" H 4650 2050 50  0001 C CNN
+	1    5450 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Interface_UART:MAX485E U?
+U 1 1 61A02136
+P 6900 1950
+F 0 "U?" H 6900 2631 50  0000 C CNN
+F 1 "MAX485E" H 6900 2540 50  0000 C CNN
+F 2 "" H 6900 1250 50  0001 C CNN
+F 3 "https://datasheets.maximintegrated.com/en/ds/MAX1487E-MAX491E.pdf" H 6900 2000 50  0001 C CNN
+	1    6900 1950
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

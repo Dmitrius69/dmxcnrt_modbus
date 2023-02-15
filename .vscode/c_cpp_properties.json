@@ -25,7 +25,6 @@
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                "C:/Users/YSER/.platformio/packages/tool-unity",
                 ""
             ],
             "browse": {
@@ -48,12 +47,11 @@
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     "C:/Users/YSER/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                    "C:/Users/YSER/.platformio/packages/tool-unity",
                     ""
                 ]
             },
             "defines": [
-                "PLATFORMIO=50203",
+                "PLATFORMIO=60106",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",

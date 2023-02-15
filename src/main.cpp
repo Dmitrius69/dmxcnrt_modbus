@@ -50,7 +50,7 @@ Here you have to select the output mode accordingly to the receiver type you are
 // Define Functions below here or use other .ino or cpp files
 //
 #define DE 2
-#define LED 21
+#define LED 11
 #define SerialTxControl 3   //RS485 управляющий контакт на arduino pin 10
 #define RS485Transmit    HIGH
 #define RS485Receive     LOW 
@@ -302,7 +302,7 @@ SIGNAL(USART1_RX_vect)
 {
 	int temp = UCSR1A;  //получаем байт состояния
 	int dmxByte = UDR1; //получаем данные из регистра данных 
-    char bDMX[4];
+    //char bDMX[4];
 	//sprintf(bDMX,"%d#%d\n", dmxByte, temp);
 	digitalWrite(LED, HIGH);
     //Serial.write("start int ");
@@ -525,7 +525,7 @@ void setup() {
 
 	Serial.begin(9600);
 
-    u32wait = millis() + 500;
+    u32wait = millis() + 10;
     u8state  = 0;
 	u8query  = 1; 	
 
@@ -539,7 +539,7 @@ void loop() {
 	cli(); //disable interrupt
 	//переменный для установки адреса с которого следует слушать DMX поток
 	//по умолчанию равен 1, если адрес равен 0, запускается функция demo()
-	address1 = 1;
+	address1 = 381;
 	address2 = 0;
 	address3 = 0;
 	address4 = 0;
@@ -706,7 +706,7 @@ void loop() {
 			     //	Serial.write("CHECK STATE1 \n");/* code */
                 u8state = 0;
 				stage = 2; //в регистр состояния записно разрешение на запускБ можно работать
-                u32wait = millis() + 500; 
+                u32wait = millis() + 10; 
               
 			  }
 
