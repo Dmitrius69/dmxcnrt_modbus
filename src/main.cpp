@@ -539,9 +539,9 @@ void loop() {
 	cli(); //disable interrupt
 	//переменный для установки адреса с которого следует слушать DMX поток
 	//по умолчанию равен 1, если адрес равен 0, запускается функция demo()
-	address1 = 381;
+	address1 = 1;
 	address2 = 0;
-	address3 = 0;
+	address3 = 1;
 	address4 = 0;
 	address5 = 0;
 	address6 = 0;
